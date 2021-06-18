@@ -1,11 +1,11 @@
+"
+I am a blog that contains posts 
+"
 Class {
 	#name : #TBMBlog,
 	#superclass : #Object,
 	#instVars : [
 		'posts'
-	],
-	#classInstVars : [
-		'uniqueInstance'
 	],
 	#category : #TinyBlogPractice
 }
@@ -44,8 +44,9 @@ TBMBlog class >> createDemoPosts [
 
 { #category : #initialization }
 TBMBlog class >> current [ 
-	"answer the instance of the TBRepository"
-	^ uniqueInstance ifNil: [ uniqueInstance := self new ] .
+	^ self selectAll
+		ifNotEmpty: [ :x | x anyOne ]
+		ifEmpty: [ self new save ] .
 ]
 
 { #category : #initialization }
@@ -53,9 +54,20 @@ TBMBlog class >> initialize [
 	self reset .
 ]
 
+{ #category : #testing }
+TBMBlog class >> initializeVoyageOnMemoryDB [
+	VOMemoryRepository new enableSingleton . 
+]
+
+{ #category : #testing }
+TBMBlog class >> isVoyageRoot [
+	"Indicates that instances of this class are top level documents in noSQL databases"
+	^ true . 
+]
+
 { #category : #initialization }
 TBMBlog class >> reset [ 
-	uniqueInstance := nil . 
+	self initializeVoyageOnMemoryDB .
 ]
 
 { #category : #'as yet unclassified' }
@@ -92,6 +104,7 @@ TBMBlog >> initialize [
 { #category : #removing }
 TBMBlog >> removeAllPosts [
 	posts := OrderedCollection new . 
+	self save . 
 ]
 
 { #category : #removing }
@@ -106,6 +119,8 @@ TBMBlog >> size [
 
 { #category : #writing }
 TBMBlog >> writeBlogPost: aPost [
-	"Add the blog post to the list of posts"
-	posts add: aPost . 
+	"Write blog post in database"
+	self allBlogPosts add: aPost . 
+	self save . 
+	
 ]
