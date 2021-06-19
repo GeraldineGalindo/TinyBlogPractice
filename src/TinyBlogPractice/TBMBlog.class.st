@@ -5,10 +5,24 @@ Class {
 	#name : #TBMBlog,
 	#superclass : #Object,
 	#instVars : [
-		'posts'
+		'posts',
+		'blogName'
+	],
+	#classInstVars : [
+		'blogName'
 	],
 	#category : #TinyBlogPractice
 }
+
+{ #category : #accessing }
+TBMBlog class >> blogName [ 
+	^ blogName . 
+]
+
+{ #category : #accessing }
+TBMBlog class >> blogName: aName [
+	blogName := aName .  
+]
 
 { #category : #'as yet unclassified' }
 TBMBlog class >> createDemoPosts [
@@ -68,6 +82,7 @@ TBMBlog class >> isVoyageRoot [
 { #category : #initialization }
 TBMBlog class >> reset [ 
 	self initializeVoyageOnMemoryDB .
+	blogName := 'TinyBlog' . 
 ]
 
 { #category : #'as yet unclassified' }
@@ -95,10 +110,21 @@ TBMBlog >> allVisibleBlogPostsFromCategory: aCategory [
 	^ posts select: [ :p | p category = aCategory and: [p isVisible ]] . 
 ]
 
+{ #category : #accessing }
+TBMBlog >> blogName [
+	^ blogName . 
+]
+
+{ #category : #accessing }
+TBMBlog >> blogName: aName [
+	blogName := aName . 
+]
+
 { #category : #initialization }
 TBMBlog >> initialize [
 	super initialize .
 	posts := OrderedCollection new . 
+	blogName := 'TinyBlog' .
 ]
 
 { #category : #removing }
